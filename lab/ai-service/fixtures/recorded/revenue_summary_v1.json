@@ -1,0 +1,34 @@
+[
+  {
+    "fixture_id": "revenue-summary-default",
+    "prompt_version": "revenue_summary_v1",
+    "scenario": "default",
+    "match": {"mode": "any_input"},
+    "model": "qwen3:8b",
+    "response": {
+      "text": "{\"averageRevenue\": 84133.33, \"method\": \"sum of credits divided by months\"}",
+      "prompt_tokens": 520,
+      "completion_tokens": 40,
+      "latency_ms": 1100,
+      "finish_reason": "stop"
+    },
+    "recorded": {"from": "qwen3:8b@2026-02-11"},
+    "notes": "Legacy path that asks the model to do arithmetic. Returns a number."
+  },
+  {
+    "fixture_id": "revenue-summary-as-string",
+    "prompt_version": "revenue_summary_v1",
+    "scenario": "revenue-as-string",
+    "match": {"mode": "any_input"},
+    "model": "qwen3:8b",
+    "response": {
+      "text": "{\"averageRevenue\": \"$78,231 approximately\", \"method\": \"estimated from deposits\"}",
+      "prompt_tokens": 520,
+      "completion_tokens": 42,
+      "latency_ms": 1280,
+      "finish_reason": "stop"
+    },
+    "recorded": {"from": "qwen3:8b@2026-04-14"},
+    "notes": "Mission 32. Exact string that broke the Java Decimal parser."
+  }
+]

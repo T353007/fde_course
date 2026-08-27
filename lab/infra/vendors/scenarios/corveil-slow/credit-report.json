@@ -1,0 +1,23 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/corveil/v2/credit-report"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "fixedDelayMilliseconds": 40000,
+    "jsonBody": {
+      "reportId": "corv-slow-{{randomValue type='UUID'}}",
+      "bureau": "CORVEIL",
+      "score": 688,
+      "scoreModel": "CV-SB-8",
+      "tradelines": 9,
+      "inquiries90d": 2,
+      "delinquencies24m": 0,
+      "reasonCodes": ["T01", "B22"]
+    },
+    "transformers": ["response-template"]
+  },
+  "priority": 1
+}

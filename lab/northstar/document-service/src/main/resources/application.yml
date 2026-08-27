@@ -1,0 +1,60 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: document-service
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:northstar}
+    username: ${DB_USER:northstar}
+    password: ${DB_PASSWORD:northstar}
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: northstar
+    open-in-view: false
+
+  flyway:
+    enabled: false
+
+  servlet:
+    multipart:
+      max-file-size: ${MAX_UPLOAD_SIZE:25MB}
+      # Raised to 25MB in 2023 because scanned statements from one Bayline branch come in
+      # at 18MB per file. Nobody has asked that branch to change their scanner settings.
+      max-request-size: ${MAX_UPLOAD_SIZE:25MB}
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: document-worker
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "com.northstar.common.event,com.northstar.common.model"
+    producer:
+      properties:
+        spring.json.add.type.headers: false
+
+northstar:
+  storage:
+    bucket: ${MINIO_BUCKET:northstar-documents}
+    endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+
+  vendors:
+    optiscan:
+      base-url: ${OPTISCAN_URL:http://localhost:8090}
+      timeout-ms: ${OPTISCAN_TIMEOUT_MS:20000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+logging:
+  level:
+    com.northstar: ${LOG_LEVEL:INFO}

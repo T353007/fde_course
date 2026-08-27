@@ -1,0 +1,19 @@
+{
+  "fixture_id": "txn-classify-canonical-default",
+  "prompt_version": "txn_classify_v3",
+  "scenario": "default",
+  "match": {
+    "mode": "input_text",
+    "input_text": "05/04|STRIPE PAYOUT|48230.00\n05/06|TRANSFER FROM SAVINGS|30000.00\n05/11|STRIPE PAYOUT|51340.00\n05/18|FASTCAPITAL LOAN|75000.00\n05/22|STRIPE PAYOUT|47830.00"
+  },
+  "model": "qwen3:8b",
+  "response": {
+    "text": "```json\n{\n  \"classifications\": [\n    {\"index\": 0, \"description\": \"STRIPE PAYOUT\", \"classification\": \"OPERATING_REVENUE\", \"confidence\": 0.93, \"reason\": \"Card processor payout.\"},\n    {\"index\": 1, \"description\": \"TRANSFER FROM SAVINGS\", \"classification\": \"INTERNAL_TRANSFER\", \"confidence\": 0.91, \"reason\": \"Transfer between own accounts.\"},\n    {\"index\": 2, \"description\": \"STRIPE PAYOUT\", \"classification\": \"OPERATING_REVENUE\", \"confidence\": 0.94, \"reason\": \"Card processor payout.\"},\n    {\"index\": 3, \"description\": \"FASTCAPITAL LOAN\", \"classification\": \"LOAN_PROCEEDS\", \"confidence\": 0.89, \"reason\": \"Competitor loan deposit.\"},\n    {\"index\": 4, \"description\": \"STRIPE PAYOUT\", \"classification\": \"OPERATING_REVENUE\", \"confidence\": 0.92, \"reason\": \"Card processor payout.\"}\n  ]\n}\n```\nHere are the labels for each transaction.",
+    "prompt_tokens": 612,
+    "completion_tokens": 248,
+    "latency_ms": 1840,
+    "finish_reason": "stop"
+  },
+  "recorded": {"from": "qwen3:8b@2026-04-09"},
+  "notes": "Canonical May statement from CANON.md. Model classifies only. Python sums."
+}

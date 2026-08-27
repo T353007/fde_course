@@ -1,0 +1,84 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: underwriting-service
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:northstar}
+    username: ${DB_USER:northstar}
+    password: ${DB_PASSWORD:northstar}
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX:20}
+      # Raised from 10 to 20 in 2022 because Corveil calls hold connections while they
+      # wait. That treated the symptom. The real fix is to stop calling the bureau inside
+      # a transaction.
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: northstar
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+
+  flyway:
+    # Migrations live in lab/infra/postgres/migrations and are run by "make up", not by the
+    # app. Two services tried to run them at boot in 2021 and raced each other.
+    enabled: false
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: underwriting-service
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "com.northstar.common.event,com.northstar.common.model"
+    producer:
+      properties:
+        spring.json.add.type.headers: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+northstar:
+  fraud-service:
+    base-url: ${FRAUD_SERVICE_URL:http://localhost:8084}
+
+  features:
+    # Added 2021-03-11 by dpatel for the V2 revenue rollout.
+    #
+    # Leave this off until credit policy signs off on the exclusion list and someone
+    # backtests it against the last two quarters of decisions. Turning it on lowers
+    # revenue on most files, which moves DSCR, which moves outcomes. Temporary flag,
+    # will remove once V2 is the only path.
+    #
+    # Still false. Still here.
+    USE_NEW_REVENUE_CALC_V2_TEMP: ${USE_NEW_REVENUE_CALC_V2_TEMP:false}
+
+    # Cascade California overlay. Shipped 2023-06 and left on.
+    CASCADE_OVERLAY_ENABLED: ${CASCADE_OVERLAY_ENABLED:true}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.northstar: ${LOG_LEVEL:INFO}
+    # Turned up during the 2023 Cascade audit and never turned back down.
+    com.northstar.underwriting.policy: DEBUG

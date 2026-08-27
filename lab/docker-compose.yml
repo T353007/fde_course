@@ -1,0 +1,317 @@
+# Northstar lab infrastructure.
+# Default `docker compose up` starts infra only (postgres, redis, kafka, minio,
+# wiremock, scenario-control, migrate). App services sit behind profiles.
+
+name: northstar-lab
+
+networks:
+  northstar:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  kafka_data:
+  minio_data:
+
+x-java-stub: &java-stub
+  image: eclipse-temurin:21-jre
+  networks:
+    - northstar
+  restart: unless-stopped
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: northstar-postgres
+    environment:
+      POSTGRES_DB: northstar
+      POSTGRES_USER: northstar
+      POSTGRES_PASSWORD: northstar
+    ports:
+      - "${LAB_POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/seed/data:/seed:ro
+    networks:
+      - northstar
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U northstar -d northstar"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  migrate:
+    image: flyway/flyway:10
+    container_name: northstar-migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./infra/postgres/migrations:/flyway/migrations:ro
+    command:
+      - -url=jdbc:postgresql://postgres:5432/northstar
+      - -user=northstar
+      - -password=northstar
+      - -schemas=northstar
+      - -defaultSchema=northstar
+      - -createSchemas=true
+      - -baselineOnMigrate=true
+      - -locations=filesystem:/flyway/migrations
+      - migrate
+    networks:
+      - northstar
+    restart: "no"
+
+  redis:
+    image: redis:7
+    container_name: northstar-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - northstar
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  kafka:
+    image: apache/kafka:3.8.0
+    container_name: northstar-kafka
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:19092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    ports:
+      - "9092:19092"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    networks:
+      - northstar
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 18
+      start_period: 25s
+
+  kafka-init:
+    image: apache/kafka:3.8.0
+    container_name: northstar-kafka-init
+    depends_on:
+      kafka:
+        condition: service_healthy
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        set -e
+        BOOTSTRAP=kafka:9092
+        for topic in application.submitted document.uploaded document.extracted underwriting.decisioned ai.extraction.requested; do
+          /opt/kafka/bin/kafka-topics.sh --bootstrap-server $$BOOTSTRAP \
+            --create --if-not-exists --topic $$topic --partitions 3 --replication-factor 1
+        done
+        /opt/kafka/bin/kafka-topics.sh --bootstrap-server $$BOOTSTRAP --list
+    networks:
+      - northstar
+    restart: "no"
+
+  minio:
+    image: minio/minio:RELEASE.2024-12-18T13-15-44Z
+    container_name: northstar-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: northstar
+      MINIO_ROOT_PASSWORD: northstarsecret
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - northstar
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  minio-init:
+    image: minio/mc:latest
+    container_name: northstar-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mc alias set local http://minio:9000 northstar northstarsecret
+        mc mb --ignore-existing local/northstar-documents
+        mc mb --ignore-existing local/northstar-policies
+        echo MinIO buckets ready
+    networks:
+      - northstar
+    restart: "no"
+
+  wiremock:
+    build:
+      context: ./infra/vendors/wiremock
+    image: northstar-lab-wiremock:3.10.0
+    pull_policy: build
+    container_name: northstar-wiremock
+    command:
+      - --global-response-templating
+      - --port
+      - "8090"
+    ports:
+      - "8090:8090"
+    networks:
+      - northstar
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- http://localhost:8090/__admin/mappings >/dev/null 2>&1",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  scenario-control:
+    build:
+      context: ./infra/vendors/scenario-control
+    image: northstar-lab-scenario-control:latest
+    pull_policy: build
+    container_name: northstar-scenario-control
+    environment:
+      WIREMOCK_URL: http://wiremock:8090
+      SCENARIOS_DIR: /scenarios
+      DEFAULT_MAPPINGS_DIR: /default-mappings
+      PORT: "8099"
+    ports:
+      - "8099:8099"
+    volumes:
+      - ./infra/vendors/scenarios:/scenarios:ro
+      - ./infra/vendors/wiremock/mappings:/default-mappings:ro
+    depends_on:
+      wiremock:
+        condition: service_healthy
+    networks:
+      - northstar
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8099/scenarios')\"",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Optional app stubs. Profiles keep default `docker compose up` infra-only.
+
+  ai-service:
+    profiles: ["core", "full", "nolocal"]
+    image: python:3.12-slim
+    container_name: northstar-ai-service
+    working_dir: /app
+    command:
+      - /bin/sh
+      - -c
+      - |
+        python - <<'PY'
+        from http.server import BaseHTTPRequestHandler, HTTPServer
+        class H(BaseHTTPRequestHandler):
+            def do_GET(self):
+                body = b'{"status":"ok","provider":"stub","note":"placeholder until ai-service image is wired"}'
+                if self.path.startswith("/v1/health") or self.path.startswith("/v1/models") or self.path == "/":
+                    self.send_response(200)
+                else:
+                    self.send_response(404)
+                    body = b'{"error":"not_found"}'
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(body)
+            def log_message(self, *args):
+                pass
+        print("ai-service placeholder on :8000", flush=True)
+        HTTPServer(("0.0.0.0", 8000), H).serve_forever()
+        PY
+    ports:
+      - "8000:8000"
+    environment:
+      LLM_PROVIDER: stub
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - northstar
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')\"",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  underwriting-service:
+    <<: *java-stub
+    profiles: ["core", "full", "nolocal"]
+    container_name: northstar-underwriting-service
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "underwriting-service placeholder; replace with the real jar when built"
+        sleep infinity
+    ports:
+      - "8083:8083"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  application-service:
+    <<: *java-stub
+    profiles: ["full", "nolocal"]
+    container_name: northstar-application-service
+    command: ["sleep", "infinity"]
+    ports:
+      - "8081:8081"
+
+  document-service:
+    <<: *java-stub
+    profiles: ["full", "nolocal"]
+    container_name: northstar-document-service
+    command: ["sleep", "infinity"]
+    ports:
+      - "8082:8082"
+
+  fraud-service:
+    <<: *java-stub
+    profiles: ["full", "nolocal"]
+    container_name: northstar-fraud-service
+    command: ["sleep", "infinity"]
+    ports:
+      - "8084:8084"

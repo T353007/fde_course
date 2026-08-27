@@ -1,0 +1,30 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/optiscan/v2/extract"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "jobId": "opt-degraded-{{randomValue type='UUID'}}",
+      "status": "COMPLETE",
+      "confidence": 0.984,
+      "lines": [
+        { "date": "05/O4", "description": "STR1PE PAY0UT", "amount": "48.230,00", "type": "CREDIT" },
+        { "date": "05/06", "description": "TRANSFER FR0M SAV1NGS", "amount": "30000", "type": "CREDIT" },
+        { "date": "05/11", "description": "STRIPE PAYOUT", "amount": "$51,340.00", "type": "CREDIT" },
+        { "date": "05/l8", "description": "FASTCAPITAL L0AN", "amount": "75000.00", "type": "CREDIT" },
+        { "date": "05/22", "description": "STRIPE PAYOUT", "amount": "4783O.00", "type": "CREDIT" }
+      ],
+      "fields": {
+        "business_name": "Harb0r and Vine LLC",
+        "ein": "82-4419O23",
+        "ending_balance": "128440.12"
+      },
+      "warnings": ["LOW_CONTRAST_SCAN", "FAX_ARTIFACTS"]
+    },
+    "transformers": ["response-template"]
+  },
+  "priority": 1
+}

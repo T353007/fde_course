@@ -1,0 +1,43 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/ledgerlink/v1/connections/.*/accounts"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "connectionId": "{{request.pathSegments.[3]}}",
+      "institution": "First Piedmont Bank",
+      "status": "ACTIVE",
+      "accounts": [
+        {
+          "accountId": "acc_checking_4412",
+          "name": "Business Checking",
+          "mask": "4412",
+          "type": "depository",
+          "subtype": "checking",
+          "balances": {
+            "available": 84210.44,
+            "current": 86102.11,
+            "isoCurrencyCode": "USD"
+          }
+        },
+        {
+          "accountId": "acc_savings_1221",
+          "name": "Business Savings",
+          "mask": "1221",
+          "type": "depository",
+          "subtype": "savings",
+          "balances": {
+            "available": 30112.00,
+            "current": 30112.00,
+            "isoCurrencyCode": "USD"
+          }
+        }
+      ]
+    },
+    "transformers": ["response-template"]
+  },
+  "priority": 10
+}

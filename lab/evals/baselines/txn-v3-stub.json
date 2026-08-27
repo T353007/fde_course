@@ -1,0 +1,562 @@
+{
+  "schemaVersion": 1,
+  "run": {
+    "suite": "txn-classification",
+    "provider": "stub",
+    "model": "baseline-keyword-v3",
+    "promptVersion": "stub-1",
+    "startedAt": "2026-08-27T08:50:09+00:00",
+    "durationSeconds": 0.002,
+    "matcher": "by_field",
+    "labelField": "classification",
+    "host": "Imtiazs-MacBook-Pro.local",
+    "python": "3.13.9",
+    "metadata": {}
+  },
+  "dataset": {
+    "path": "/Users/imtiazalam/code/fde_course/lab/data/golden/txn-classification-v3.jsonl",
+    "sha256": "2c2333c155a6bc5e67ad38192f524b49fff4ddd5fa2d9975eb7064b265a62c9b",
+    "caseCount": 400,
+    "loadedAt": "2026-08-27T08:50:09+00:00",
+    "sizeBytes": 131535
+  },
+  "overall": {
+    "name": "OVERALL",
+    "support": 400,
+    "correct": 384,
+    "wrong": 16,
+    "accuracy": 0.96,
+    "share": 1.0,
+    "meanScore": 0.96,
+    "errors": 0,
+    "macro": {
+      "kind": "macro",
+      "precision": 0.862879,
+      "recall": 0.822412,
+      "f1": 0.835731
+    },
+    "weighted": {
+      "kind": "weighted",
+      "precision": 0.968682,
+      "recall": 0.96,
+      "f1": 0.961445
+    },
+    "perClass": {
+      "OPERATING_REVENUE": {
+        "label": "OPERATING_REVENUE",
+        "support": 344,
+        "predicted": 352,
+        "truePositives": 340,
+        "falsePositives": 12,
+        "falseNegatives": 4,
+        "precision": 0.965909,
+        "recall": 0.988372,
+        "f1": 0.977011
+      },
+      "LOAN_PROCEEDS": {
+        "label": "LOAN_PROCEEDS",
+        "support": 25,
+        "predicted": 17,
+        "truePositives": 17,
+        "falsePositives": 0,
+        "falseNegatives": 8,
+        "precision": 1.0,
+        "recall": 0.68,
+        "f1": 0.809524
+      },
+      "INTERNAL_TRANSFER": {
+        "label": "INTERNAL_TRANSFER",
+        "support": 15,
+        "predicted": 11,
+        "truePositives": 11,
+        "falsePositives": 0,
+        "falseNegatives": 4,
+        "precision": 1.0,
+        "recall": 0.733333,
+        "f1": 0.846154
+      },
+      "EXPENSE": {
+        "label": "EXPENSE",
+        "support": 6,
+        "predicted": 6,
+        "truePositives": 6,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "OWNER_CAPITAL": {
+        "label": "OWNER_CAPITAL",
+        "support": 4,
+        "predicted": 5,
+        "truePositives": 4,
+        "falsePositives": 1,
+        "falseNegatives": 0,
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1": 0.888889
+      },
+      "REFUND_CHARGEBACK": {
+        "label": "REFUND_CHARGEBACK",
+        "support": 3,
+        "predicted": 3,
+        "truePositives": 3,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "TAX_REFUND": {
+        "label": "TAX_REFUND",
+        "support": 2,
+        "predicted": 2,
+        "truePositives": 2,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "INSURANCE_SETTLEMENT": {
+        "label": "INSURANCE_SETTLEMENT",
+        "support": 1,
+        "predicted": 1,
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "UNKNOWN": {
+        "label": "UNKNOWN",
+        "support": 0,
+        "predicted": 3,
+        "truePositives": 0,
+        "falsePositives": 3,
+        "falseNegatives": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "confusion": {
+      "labels": [
+        "OPERATING_REVENUE",
+        "LOAN_PROCEEDS",
+        "INTERNAL_TRANSFER",
+        "EXPENSE",
+        "OWNER_CAPITAL",
+        "REFUND_CHARGEBACK",
+        "TAX_REFUND",
+        "INSURANCE_SETTLEMENT",
+        "UNKNOWN"
+      ],
+      "cells": [
+        {
+          "expected": "EXPENSE",
+          "predicted": "EXPENSE",
+          "count": 6
+        },
+        {
+          "expected": "INSURANCE_SETTLEMENT",
+          "predicted": "INSURANCE_SETTLEMENT",
+          "count": 1
+        },
+        {
+          "expected": "INTERNAL_TRANSFER",
+          "predicted": "INTERNAL_TRANSFER",
+          "count": 11
+        },
+        {
+          "expected": "INTERNAL_TRANSFER",
+          "predicted": "OPERATING_REVENUE",
+          "count": 4
+        },
+        {
+          "expected": "LOAN_PROCEEDS",
+          "predicted": "LOAN_PROCEEDS",
+          "count": 17
+        },
+        {
+          "expected": "LOAN_PROCEEDS",
+          "predicted": "OPERATING_REVENUE",
+          "count": 8
+        },
+        {
+          "expected": "OPERATING_REVENUE",
+          "predicted": "OPERATING_REVENUE",
+          "count": 340
+        },
+        {
+          "expected": "OPERATING_REVENUE",
+          "predicted": "OWNER_CAPITAL",
+          "count": 1
+        },
+        {
+          "expected": "OPERATING_REVENUE",
+          "predicted": "UNKNOWN",
+          "count": 3
+        },
+        {
+          "expected": "OWNER_CAPITAL",
+          "predicted": "OWNER_CAPITAL",
+          "count": 4
+        },
+        {
+          "expected": "REFUND_CHARGEBACK",
+          "predicted": "REFUND_CHARGEBACK",
+          "count": 3
+        },
+        {
+          "expected": "TAX_REFUND",
+          "predicted": "TAX_REFUND",
+          "count": 2
+        }
+      ]
+    },
+    "description": "every case in the set"
+  },
+  "slices": [
+    {
+      "name": "loan_proceeds",
+      "support": 25,
+      "correct": 17,
+      "wrong": 8,
+      "accuracy": 0.68,
+      "share": 0.0625,
+      "meanScore": 0.68,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 0.5,
+        "recall": 0.34,
+        "f1": 0.404762
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 1.0,
+        "recall": 0.68,
+        "f1": 0.809524
+      },
+      "perClass": {
+        "LOAN_PROCEEDS": {
+          "label": "LOAN_PROCEEDS",
+          "support": 25,
+          "predicted": 17,
+          "truePositives": 17,
+          "falsePositives": 0,
+          "falseNegatives": 8,
+          "precision": 1.0,
+          "recall": 0.68,
+          "f1": 0.809524
+        },
+        "OPERATING_REVENUE": {
+          "label": "OPERATING_REVENUE",
+          "support": 0,
+          "predicted": 8,
+          "truePositives": 0,
+          "falsePositives": 8,
+          "falseNegatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "LOAN_PROCEEDS",
+          "OPERATING_REVENUE"
+        ],
+        "cells": [
+          {
+            "expected": "LOAN_PROCEEDS",
+            "predicted": "LOAN_PROCEEDS",
+            "count": 17
+          },
+          {
+            "expected": "LOAN_PROCEEDS",
+            "predicted": "OPERATING_REVENUE",
+            "count": 8
+          }
+        ]
+      },
+      "description": "money the business borrowed, which is not revenue"
+    },
+    {
+      "name": "internal_transfer",
+      "support": 15,
+      "correct": 11,
+      "wrong": 4,
+      "accuracy": 0.733333,
+      "share": 0.0375,
+      "meanScore": 0.733333,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 0.5,
+        "recall": 0.366667,
+        "f1": 0.423077
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 1.0,
+        "recall": 0.733333,
+        "f1": 0.846154
+      },
+      "perClass": {
+        "INTERNAL_TRANSFER": {
+          "label": "INTERNAL_TRANSFER",
+          "support": 15,
+          "predicted": 11,
+          "truePositives": 11,
+          "falsePositives": 0,
+          "falseNegatives": 4,
+          "precision": 1.0,
+          "recall": 0.733333,
+          "f1": 0.846154
+        },
+        "OPERATING_REVENUE": {
+          "label": "OPERATING_REVENUE",
+          "support": 0,
+          "predicted": 4,
+          "truePositives": 0,
+          "falsePositives": 4,
+          "falseNegatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "INTERNAL_TRANSFER",
+          "OPERATING_REVENUE"
+        ],
+        "cells": [
+          {
+            "expected": "INTERNAL_TRANSFER",
+            "predicted": "INTERNAL_TRANSFER",
+            "count": 11
+          },
+          {
+            "expected": "INTERNAL_TRANSFER",
+            "predicted": "OPERATING_REVENUE",
+            "count": 4
+          }
+        ]
+      },
+      "description": "money moving between accounts the business already owns"
+    },
+    {
+      "name": "poor_ocr",
+      "support": 41,
+      "correct": 25,
+      "wrong": 16,
+      "accuracy": 0.609756,
+      "share": 0.1025,
+      "meanScore": 0.609756,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 0.525,
+        "recall": 0.287879,
+        "f1": 0.328571
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 0.780488,
+        "recall": 0.609756,
+        "f1": 0.606272
+      },
+      "perClass": {
+        "OPERATING_REVENUE": {
+          "label": "OPERATING_REVENUE",
+          "support": 24,
+          "predicted": 32,
+          "truePositives": 20,
+          "falsePositives": 12,
+          "falseNegatives": 4,
+          "precision": 0.625,
+          "recall": 0.833333,
+          "f1": 0.714286
+        },
+        "LOAN_PROCEEDS": {
+          "label": "LOAN_PROCEEDS",
+          "support": 11,
+          "predicted": 3,
+          "truePositives": 3,
+          "falsePositives": 0,
+          "falseNegatives": 8,
+          "precision": 1.0,
+          "recall": 0.272727,
+          "f1": 0.428571
+        },
+        "INTERNAL_TRANSFER": {
+          "label": "INTERNAL_TRANSFER",
+          "support": 6,
+          "predicted": 2,
+          "truePositives": 2,
+          "falsePositives": 0,
+          "falseNegatives": 4,
+          "precision": 1.0,
+          "recall": 0.333333,
+          "f1": 0.5
+        },
+        "OWNER_CAPITAL": {
+          "label": "OWNER_CAPITAL",
+          "support": 0,
+          "predicted": 1,
+          "truePositives": 0,
+          "falsePositives": 1,
+          "falseNegatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "UNKNOWN": {
+          "label": "UNKNOWN",
+          "support": 0,
+          "predicted": 3,
+          "truePositives": 0,
+          "falsePositives": 3,
+          "falseNegatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "OPERATING_REVENUE",
+          "LOAN_PROCEEDS",
+          "INTERNAL_TRANSFER",
+          "OWNER_CAPITAL",
+          "UNKNOWN"
+        ],
+        "cells": [
+          {
+            "expected": "INTERNAL_TRANSFER",
+            "predicted": "INTERNAL_TRANSFER",
+            "count": 2
+          },
+          {
+            "expected": "INTERNAL_TRANSFER",
+            "predicted": "OPERATING_REVENUE",
+            "count": 4
+          },
+          {
+            "expected": "LOAN_PROCEEDS",
+            "predicted": "LOAN_PROCEEDS",
+            "count": 3
+          },
+          {
+            "expected": "LOAN_PROCEEDS",
+            "predicted": "OPERATING_REVENUE",
+            "count": 8
+          },
+          {
+            "expected": "OPERATING_REVENUE",
+            "predicted": "OPERATING_REVENUE",
+            "count": 20
+          },
+          {
+            "expected": "OPERATING_REVENUE",
+            "predicted": "OWNER_CAPITAL",
+            "count": 1
+          },
+          {
+            "expected": "OPERATING_REVENUE",
+            "predicted": "UNKNOWN",
+            "count": 3
+          }
+        ]
+      },
+      "description": "scanned or faxed pages the OCR vendor mangled"
+    },
+    {
+      "name": "card_settlement",
+      "support": 336,
+      "correct": 333,
+      "wrong": 3,
+      "accuracy": 0.991071,
+      "share": 0.84,
+      "meanScore": 0.991071,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 0.5,
+        "recall": 0.495536,
+        "f1": 0.497758
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 1.0,
+        "recall": 0.991071,
+        "f1": 0.995516
+      },
+      "perClass": {
+        "OPERATING_REVENUE": {
+          "label": "OPERATING_REVENUE",
+          "support": 336,
+          "predicted": 333,
+          "truePositives": 333,
+          "falsePositives": 0,
+          "falseNegatives": 3,
+          "precision": 1.0,
+          "recall": 0.991071,
+          "f1": 0.995516
+        },
+        "UNKNOWN": {
+          "label": "UNKNOWN",
+          "support": 0,
+          "predicted": 3,
+          "truePositives": 0,
+          "falsePositives": 3,
+          "falseNegatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "OPERATING_REVENUE",
+          "UNKNOWN"
+        ],
+        "cells": [
+          {
+            "expected": "OPERATING_REVENUE",
+            "predicted": "OPERATING_REVENUE",
+            "count": 333
+          },
+          {
+            "expected": "OPERATING_REVENUE",
+            "predicted": "UNKNOWN",
+            "count": 3
+          }
+        ]
+      },
+      "description": "daily payouts from a card processor, the easy majority"
+    }
+  ],
+  "cost": {
+    "calls": 400,
+    "promptTokens": 0,
+    "completionTokens": 0,
+    "totalTokens": 0,
+    "totalUsd": 0.0,
+    "usdPerCase": 0.0,
+    "latencyMs": {
+      "mean": 12.0,
+      "p50": 12.0,
+      "p95": 12.0,
+      "p99": 12.0
+    },
+    "wallClockSeconds": 0.002,
+    "costBasis": "stub provider, no model call was made"
+  },
+  "cases": []
+}

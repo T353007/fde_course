@@ -1,0 +1,48 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: application-service
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:northstar}
+    username: ${DB_USER:northstar}
+    password: ${DB_PASSWORD:northstar}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: northstar
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+  flyway:
+    enabled: false
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: application-service
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "com.northstar.common.event,com.northstar.common.model"
+    producer:
+      properties:
+        spring.json.add.type.headers: false
+
+northstar:
+  underwriting:
+    base-url: ${UNDERWRITING_SERVICE_URL:http://localhost:8083}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+logging:
+  level:
+    com.northstar: ${LOG_LEVEL:INFO}

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/loancore/soap"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "text/xml; charset=utf-8" },
+    "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <FundLoanResponse xmlns=\"http://loancore.northstar.local/v1\">\n      <Status>ACCEPTED</Status>\n      <LoanNumber>LC-{{randomValue length=8 type='ALPHANUMERIC'}}</LoanNumber>\n      <BatchWindow>OPEN</BatchWindow>\n    </FundLoanResponse>\n  </soap:Body>\n</soap:Envelope>\n",
+    "transformers": ["response-template"]
+  },
+  "priority": 10
+}

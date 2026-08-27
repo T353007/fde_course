@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/sentinel/v1/score"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "requestId": "sen-{{randomValue type='UUID'}}",
+      "score": 248,
+      "band": "LOW",
+      "reasonCodes": ["EMAIL_AGE_LOW", "IP_PROXY"],
+      "modelVersion": "sr-4.1"
+    },
+    "transformers": ["response-template"]
+  },
+  "priority": 10
+}

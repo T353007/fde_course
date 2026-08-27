@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/ledgerlink/v1/connections/[^/]+/accounts"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "accounts": [
+        {
+          "accountId": "acc_1001",
+          "name": "Business Checking",
+          "mask": "1221",
+          "type": "depository",
+          "balances": { "available": 84210.44, "current": 84210.44 }
+        }
+      ],
+      "connectionId": "{{request.pathSegments.[3]}}",
+      "status": "READY"
+    },
+    "transformers": ["response-template"]
+  }
+}

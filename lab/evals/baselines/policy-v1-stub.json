@@ -1,0 +1,495 @@
+{
+  "schemaVersion": 1,
+  "run": {
+    "suite": "policy-qa",
+    "provider": "stub",
+    "model": "baseline-keyword-v3",
+    "promptVersion": "stub-1",
+    "startedAt": "2026-08-27T08:50:09+00:00",
+    "durationSeconds": 0.001,
+    "matcher": "by_field",
+    "labelField": "citation",
+    "host": "Imtiazs-MacBook-Pro.local",
+    "python": "3.13.9",
+    "metadata": {}
+  },
+  "dataset": {
+    "path": "/Users/imtiazalam/code/fde_course/lab/data/golden/policy-qa-v1.jsonl",
+    "sha256": "ceadee55dd46e965bcdf8f526a8cb263970996820ddd87f6169dc494ce1b35d0",
+    "caseCount": 80,
+    "loadedAt": "2026-08-27T08:50:09+00:00",
+    "sizeBytes": 78548
+  },
+  "overall": {
+    "name": "OVERALL",
+    "support": 80,
+    "correct": 47,
+    "wrong": 33,
+    "accuracy": 0.5875,
+    "share": 1.0,
+    "meanScore": 0.5875,
+    "errors": 0,
+    "macro": {
+      "kind": "macro",
+      "precision": 0.583333,
+      "recall": 0.53876,
+      "f1": 0.507338
+    },
+    "weighted": {
+      "kind": "weighted",
+      "precision": 0.9625,
+      "recall": 0.5875,
+      "f1": 0.64033
+    },
+    "perClass": {
+      "credit-policy-2025.pdf": {
+        "label": "credit-policy-2025.pdf",
+        "support": 43,
+        "predicted": 10,
+        "truePositives": 10,
+        "falsePositives": 0,
+        "falseNegatives": 33,
+        "precision": 1.0,
+        "recall": 0.232558,
+        "f1": 0.377358
+      },
+      "SBA-overlay.pdf": {
+        "label": "SBA-overlay.pdf",
+        "support": 23,
+        "predicted": 23,
+        "truePositives": 23,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "grants-program-addendum.docx": {
+        "label": "grants-program-addendum.docx",
+        "support": 8,
+        "predicted": 8,
+        "truePositives": 8,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "California-overlay.pdf": {
+        "label": "California-overlay.pdf",
+        "support": 6,
+        "predicted": 12,
+        "truePositives": 6,
+        "falsePositives": 6,
+        "falseNegatives": 0,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.666667
+      },
+      "credit-policy-2026.pdf": {
+        "label": "credit-policy-2026.pdf",
+        "support": 0,
+        "predicted": 12,
+        "truePositives": 0,
+        "falsePositives": 12,
+        "falseNegatives": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "credit-policy-FINAL.pdf": {
+        "label": "credit-policy-FINAL.pdf",
+        "support": 0,
+        "predicted": 15,
+        "truePositives": 0,
+        "falsePositives": 15,
+        "falseNegatives": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "confusion": {
+      "labels": [
+        "credit-policy-2025.pdf",
+        "SBA-overlay.pdf",
+        "grants-program-addendum.docx",
+        "California-overlay.pdf",
+        "credit-policy-2026.pdf",
+        "credit-policy-FINAL.pdf"
+      ],
+      "cells": [
+        {
+          "expected": "California-overlay.pdf",
+          "predicted": "California-overlay.pdf",
+          "count": 6
+        },
+        {
+          "expected": "SBA-overlay.pdf",
+          "predicted": "SBA-overlay.pdf",
+          "count": 23
+        },
+        {
+          "expected": "credit-policy-2025.pdf",
+          "predicted": "California-overlay.pdf",
+          "count": 6
+        },
+        {
+          "expected": "credit-policy-2025.pdf",
+          "predicted": "credit-policy-2025.pdf",
+          "count": 10
+        },
+        {
+          "expected": "credit-policy-2025.pdf",
+          "predicted": "credit-policy-2026.pdf",
+          "count": 12
+        },
+        {
+          "expected": "credit-policy-2025.pdf",
+          "predicted": "credit-policy-FINAL.pdf",
+          "count": 15
+        },
+        {
+          "expected": "grants-program-addendum.docx",
+          "predicted": "grants-program-addendum.docx",
+          "count": 8
+        }
+      ]
+    },
+    "description": "every case in the set"
+  },
+  "slices": [
+    {
+      "name": "superseded_trap",
+      "support": 15,
+      "correct": 0,
+      "wrong": 15,
+      "accuracy": 0.0,
+      "share": 0.1875,
+      "meanScore": 0.0,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "perClass": {
+        "credit-policy-2025.pdf": {
+          "label": "credit-policy-2025.pdf",
+          "support": 15,
+          "predicted": 0,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 15,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "credit-policy-FINAL.pdf": {
+          "label": "credit-policy-FINAL.pdf",
+          "support": 0,
+          "predicted": 15,
+          "truePositives": 0,
+          "falsePositives": 15,
+          "falseNegatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "credit-policy-2025.pdf",
+          "credit-policy-FINAL.pdf"
+        ],
+        "cells": [
+          {
+            "expected": "credit-policy-2025.pdf",
+            "predicted": "credit-policy-FINAL.pdf",
+            "count": 15
+          }
+        ]
+      },
+      "description": "the closest document by wording is the one that expired"
+    },
+    {
+      "name": "tenant_scoped",
+      "support": 12,
+      "correct": 6,
+      "wrong": 6,
+      "accuracy": 0.5,
+      "share": 0.15,
+      "meanScore": 0.5,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 0.25,
+        "recall": 0.5,
+        "f1": 0.333333
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 0.25,
+        "recall": 0.5,
+        "f1": 0.333333
+      },
+      "perClass": {
+        "California-overlay.pdf": {
+          "label": "California-overlay.pdf",
+          "support": 6,
+          "predicted": 12,
+          "truePositives": 6,
+          "falsePositives": 6,
+          "falseNegatives": 0,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.666667
+        },
+        "credit-policy-2025.pdf": {
+          "label": "credit-policy-2025.pdf",
+          "support": 6,
+          "predicted": 0,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 6,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "California-overlay.pdf",
+          "credit-policy-2025.pdf"
+        ],
+        "cells": [
+          {
+            "expected": "California-overlay.pdf",
+            "predicted": "California-overlay.pdf",
+            "count": 6
+          },
+          {
+            "expected": "credit-policy-2025.pdf",
+            "predicted": "California-overlay.pdf",
+            "count": 6
+          }
+        ]
+      },
+      "description": "the answer must not come from another tenant's overlay"
+    },
+    {
+      "name": "effective_date",
+      "support": 12,
+      "correct": 0,
+      "wrong": 12,
+      "accuracy": 0.0,
+      "share": 0.15,
+      "meanScore": 0.0,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "perClass": {
+        "credit-policy-2025.pdf": {
+          "label": "credit-policy-2025.pdf",
+          "support": 12,
+          "predicted": 0,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 12,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "credit-policy-2026.pdf": {
+          "label": "credit-policy-2026.pdf",
+          "support": 0,
+          "predicted": 12,
+          "truePositives": 0,
+          "falsePositives": 12,
+          "falseNegatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "credit-policy-2025.pdf",
+          "credit-policy-2026.pdf"
+        ],
+        "cells": [
+          {
+            "expected": "credit-policy-2025.pdf",
+            "predicted": "credit-policy-2026.pdf",
+            "count": 12
+          }
+        ]
+      },
+      "description": "the 2026 policy is real but not in effect yet"
+    },
+    {
+      "name": "product_overlay",
+      "support": 16,
+      "correct": 16,
+      "wrong": 0,
+      "accuracy": 1.0,
+      "share": 0.2,
+      "meanScore": 1.0,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "perClass": {
+        "SBA-overlay.pdf": {
+          "label": "SBA-overlay.pdf",
+          "support": 16,
+          "predicted": 16,
+          "truePositives": 16,
+          "falsePositives": 0,
+          "falseNegatives": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "SBA-overlay.pdf"
+        ],
+        "cells": [
+          {
+            "expected": "SBA-overlay.pdf",
+            "predicted": "SBA-overlay.pdf",
+            "count": 16
+          }
+        ]
+      },
+      "description": "SBA overlay beats everything when the product is SBA 7(a)"
+    },
+    {
+      "name": "straightforward",
+      "support": 25,
+      "correct": 25,
+      "wrong": 0,
+      "accuracy": 1.0,
+      "share": 0.3125,
+      "meanScore": 1.0,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "perClass": {
+        "credit-policy-2025.pdf": {
+          "label": "credit-policy-2025.pdf",
+          "support": 10,
+          "predicted": 10,
+          "truePositives": 10,
+          "falsePositives": 0,
+          "falseNegatives": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "grants-program-addendum.docx": {
+          "label": "grants-program-addendum.docx",
+          "support": 8,
+          "predicted": 8,
+          "truePositives": 8,
+          "falsePositives": 0,
+          "falseNegatives": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "SBA-overlay.pdf": {
+          "label": "SBA-overlay.pdf",
+          "support": 7,
+          "predicted": 7,
+          "truePositives": 7,
+          "falsePositives": 0,
+          "falseNegatives": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "credit-policy-2025.pdf",
+          "grants-program-addendum.docx",
+          "SBA-overlay.pdf"
+        ],
+        "cells": [
+          {
+            "expected": "SBA-overlay.pdf",
+            "predicted": "SBA-overlay.pdf",
+            "count": 7
+          },
+          {
+            "expected": "credit-policy-2025.pdf",
+            "predicted": "credit-policy-2025.pdf",
+            "count": 10
+          },
+          {
+            "expected": "grants-program-addendum.docx",
+            "predicted": "grants-program-addendum.docx",
+            "count": 8
+          }
+        ]
+      },
+      "description": "one obvious document, no precedence question"
+    }
+  ],
+  "cost": {
+    "calls": 80,
+    "promptTokens": 0,
+    "completionTokens": 0,
+    "totalTokens": 0,
+    "totalUsd": 0.0,
+    "usdPerCase": 0.0,
+    "latencyMs": {
+      "mean": 12.0,
+      "p50": 12.0,
+      "p95": 12.0,
+      "p99": 12.0
+    },
+    "wallClockSeconds": 0.001,
+    "costBasis": "stub provider, no model call was made"
+  },
+  "cases": []
+}

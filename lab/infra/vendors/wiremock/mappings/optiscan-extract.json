@@ -1,0 +1,29 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/optiscan/v2/extract"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "jobId": "opt-{{randomValue type='UUID'}}",
+      "status": "COMPLETE",
+      "confidence": 0.971,
+      "lines": [
+        { "date": "05/04", "description": "STRIPE PAYOUT", "amount": "48230.00", "type": "CREDIT" },
+        { "date": "05/06", "description": "TRANSFER FROM SAVINGS", "amount": "30000.00", "type": "CREDIT" },
+        { "date": "05/11", "description": "STRIPE PAYOUT", "amount": "51340.00", "type": "CREDIT" },
+        { "date": "05/18", "description": "FASTCAPITAL LOAN", "amount": "75000.00", "type": "CREDIT" },
+        { "date": "05/22", "description": "STRIPE PAYOUT", "amount": "47830.00", "type": "CREDIT" }
+      ],
+      "fields": {
+        "business_name": "Harbor and Vine LLC",
+        "ein": "82-4419023",
+        "ending_balance": "128440.12"
+      }
+    },
+    "transformers": ["response-template"]
+  },
+  "priority": 10
+}

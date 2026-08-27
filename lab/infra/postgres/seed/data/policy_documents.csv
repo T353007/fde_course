@@ -1,0 +1,9 @@
+policy_document_id,file_name,title,doc_kind,tenant_id,product,version_label,storage_key,uploaded_by,uploaded_at,effective_from
+1,credit-policy-2024.pdf,Northstar Credit Policy 2024,BASE,,,2024.1,northstar-policies/credit-policy-2024.pdf,doug.feinberg,2024-01-04 09:12:00,2024-01-01
+2,credit-policy-2025.pdf,Northstar Credit Policy 2025,BASE,,,2025.1,northstar-policies/credit-policy-2025.pdf,doug.feinberg,2025-01-06 08:44:00,2025-01-01
+3,credit-policy-FINAL.pdf,Credit Policy FINAL,BASE,,,draft,northstar-policies/credit-policy-FINAL.pdf,m.webb,2023-11-02 17:31:00,
+4,credit-policy-FINAL2.pdf,Credit Policy FINAL2,BASE,,,2025.2,northstar-policies/credit-policy-FINAL2.pdf,m.webb,2025-07-19 21:02:00,
+5,credit-policy-2026.pdf,Northstar Credit Policy 2026,BASE,,,2026.1,northstar-policies/credit-policy-2026.pdf,doug.feinberg,2026-01-22 10:05:00,2026-03-01
+6,California-overlay.pdf,California Lending Overlay,TENANT_OVERLAY,CASCADE,,2025.1,northstar-policies/California-overlay.pdf,doug.feinberg,2025-03-28 15:19:00,2025-04-01
+7,SBA-overlay.pdf,SBA 7(a) Program Overlay,PRODUCT_OVERLAY,,SBA_7A,2025.3,northstar-policies/SBA-overlay.pdf,renee.blackwell,2025-09-11 11:47:00,
+8,grants-program-addendum.docx,State Grants Program Addendum,ADDENDUM,,,1.0,northstar-policies/grants-program-addendum.docx,b.tran,2022-06-14 13:26:00,

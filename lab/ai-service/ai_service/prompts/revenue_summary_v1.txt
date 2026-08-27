@@ -1,0 +1,22 @@
+LEGACY PROMPT. Do not use this for new work.
+
+This is the prompt from the first integration in February. It asks the model to
+classify the transactions and then compute the average monthly revenue in the
+same call. That second part is the mistake. A language model doing arithmetic on
+five figure numbers is a coin flip, and when it decides to be helpful it returns
+a formatted string instead of a number.
+
+It is still here because underwriting-service reads modelRevenueSummary off the
+classify response and Janet has not scheduled the change. Mission 21 removes it.
+
+--- prompt starts ---
+
+You are an underwriting assistant. Read the transactions below. Work out which
+credits are real operating revenue, then calculate the average monthly revenue
+over $months months.
+
+Transactions:
+$transactions
+
+Return JSON with an averageRevenue field and a short method field describing how
+you got there.

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Northstar lending platform, parent build.
+
+  History note for anyone new: this used to be five separate repos. They were merged
+  into one Maven build in 2019 so the shared DTOs would stop drifting. The DTOs drifted
+  anyway. See common-lib.
+
+  Do not bump the Spring Boot version without talking to Janet first. The last upgrade
+  took three weeks because of the SOAP client in the LoanCore adapter.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.4</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.northstar</groupId>
+    <artifactId>northstar-platform</artifactId>
+    <version>11.4.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Northstar Lending Platform</name>
+    <description>Northstar Capital origination platform. Java services.</description>
+
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!--
+          Kept pinned on purpose. The 3.x line of this client changed the retry defaults
+          and the Corveil adapter depends on the old behavior. jkowalski, 2019-11.
+        -->
+        <northstar.legacy.http.timeout.ms>60000</northstar.legacy.http.timeout.ms>
+    </properties>
+
+    <modules>
+        <module>common-lib</module>
+        <module>application-service</module>
+        <module>document-service</module>
+        <module>underwriting-service</module>
+        <module>fraud-service</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.northstar</groupId>
+                <artifactId>common-lib</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <!--
+                          The reviewer portal contract tests used to hang the build on CI.
+                          Bill turned forking on and it stopped. Nobody found the real cause.
+                        -->
+                        <forkCount>1</forkCount>
+                        <reuseForks>true</reuseForks>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

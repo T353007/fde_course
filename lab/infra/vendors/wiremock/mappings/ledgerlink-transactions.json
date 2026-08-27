@@ -1,0 +1,26 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/ledgerlink/v1/transactions/sync"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "connectionId": "{{jsonPath request.body '$.connectionId'}}",
+      "cursor": "cursor_next_ok",
+      "transactions": [
+        {
+          "transactionId": "txn_9001",
+          "accountId": "acc_checking_4412",
+          "postedDate": "2026-02-18",
+          "description": "STRIPE PAYOUT",
+          "amount": 48230.00,
+          "pending": false
+        }
+      ]
+    },
+    "transformers": ["response-template"]
+  },
+  "priority": 10
+}

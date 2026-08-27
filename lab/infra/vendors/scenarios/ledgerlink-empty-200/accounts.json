@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/ledgerlink/v1/connections/.*/accounts"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "connectionId": "{{request.pathSegments.[3]}}",
+      "institution": "First Piedmont Bank",
+      "status": "STALE",
+      "accounts": []
+    },
+    "transformers": ["response-template"]
+  },
+  "priority": 1
+}

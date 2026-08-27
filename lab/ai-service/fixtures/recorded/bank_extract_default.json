@@ -1,0 +1,16 @@
+{
+  "fixture_id": "bank-extract-default",
+  "prompt_version": "bank_extract_v2",
+  "scenario": "default",
+  "match": {"mode": "any_input"},
+  "model": "qwen3:8b",
+  "response": {
+    "text": "```json\n{\n  \"accountHolder\": \"Harbor Street Bakery LLC\",\n  \"statementPeriod\": {\"start\": \"2026-05-01\", \"end\": \"2026-05-31\"},\n  \"ein\": null,\n  \"transactions\": [\n    {\"date\": \"2026-05-04\", \"description\": \"STRIPE PAYOUT\", \"amount\": 48230.00, \"type\": \"credit\"},\n    {\"date\": \"2026-05-06\", \"description\": \"TRANSFER FROM SAVINGS\", \"amount\": 30000.00, \"type\": \"credit\"},\n    {\"date\": \"2026-05-11\", \"description\": \"STRIPE PAYOUT\", \"amount\": 51340.00, \"type\": \"credit\"},\n    {\"date\": \"2026-05-18\", \"description\": \"FASTCAPITAL LOAN\", \"amount\": 75000.00, \"type\": \"credit\"},\n    {\"date\": \"2026-05-22\", \"description\": \"STRIPE PAYOUT\", \"amount\": 47830.00, \"type\": \"credit\"}\n  ],\n  \"ocrConfidence\": 0.88,\n  \"notes\": null\n}\n```",
+    "prompt_tokens": 980,
+    "completion_tokens": 310,
+    "latency_ms": 2400,
+    "finish_reason": "stop"
+  },
+  "recorded": {"from": "qwen3:8b@2026-04-02"},
+  "notes": "Clean extraction of the canonical May statement. EIN left null."
+}

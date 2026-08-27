@@ -1,0 +1,76 @@
+[
+  {
+    "fixture_id": "policy-answer-default",
+    "prompt_version": "policy_answer_v2",
+    "scenario": "default",
+    "match": {"mode": "any_input"},
+    "model": "qwen3:8b",
+    "response": {
+      "text": "{\n  \"answer\": \"Debt service coverage ratio must be at least 1.25 for a term loan and 1.15 for a line of credit. Calculate it from operating revenue, not total deposits.\",\n  \"citedChunkIds\": [],\n  \"confident\": true\n}",
+      "prompt_tokens": 1400,
+      "completion_tokens": 90,
+      "latency_ms": 1600,
+      "finish_reason": "stop"
+    },
+    "recorded": {"from": "qwen3:8b@2026-04-21"},
+    "notes": "Generic policy answer. Citations come from retrieval."
+  },
+  {
+    "fixture_id": "memo-draft-default",
+    "prompt_version": "memo_draft_v1",
+    "scenario": "default",
+    "match": {"mode": "any_input"},
+    "model": "qwen3:8b",
+    "response": {
+      "text": "{\n  \"summary\": \"Term loan request supported by three months of statements. Operating revenue should be verified after excluding transfers and loan proceeds.\",\n  \"strengths\": [\"Consistent card settlement deposits\", \"Product fits stated use of funds\"],\n  \"concerns\": [\"Fastcapital loan proceeds appear on the statement\", \"Internal transfer inflated naive deposit totals\"],\n  \"recommendation\": \"Complete payoff verification on existing Fastcapital debt before decision.\"\n}",
+      "prompt_tokens": 2200,
+      "completion_tokens": 160,
+      "latency_ms": 2800,
+      "finish_reason": "stop"
+    },
+    "recorded": {"from": "qwen3:8b@2026-04-28"},
+    "notes": "First-pass memo. Numbers come from the request, not the model."
+  },
+  {
+    "fixture_id": "classify-slow-p99",
+    "prompt_version": "txn_classify_v3",
+    "scenario": "slow-p99",
+    "match": {"mode": "any_input"},
+    "sleep_seconds_range": [9.0, 40.0],
+    "model": "qwen3:8b",
+    "response": {
+      "delegate_to_scenario": "default",
+      "finish_reason": "stop"
+    },
+    "recorded": {"from": "synthetic"},
+    "notes": "slow-p99 for classify. Delegates body to default."
+  },
+  {
+    "fixture_id": "extract-slow-p99",
+    "prompt_version": "bank_extract_v2",
+    "scenario": "slow-p99",
+    "match": {"mode": "any_input"},
+    "sleep_seconds_range": [9.0, 40.0],
+    "model": "qwen3:8b",
+    "response": {
+      "delegate_to_scenario": "default",
+      "finish_reason": "stop"
+    },
+    "recorded": {"from": "synthetic"},
+    "notes": "slow-p99 for extract. Delegates body to default."
+  },
+  {
+    "fixture_id": "revenue-slow-p99",
+    "prompt_version": "revenue_summary_v1",
+    "scenario": "slow-p99",
+    "match": {"mode": "any_input"},
+    "sleep_seconds_range": [9.0, 40.0],
+    "model": "qwen3:8b",
+    "response": {
+      "delegate_to_scenario": "default",
+      "finish_reason": "stop"
+    },
+    "recorded": {"from": "synthetic"},
+    "notes": "slow-p99 for legacy revenue summary."
+  }
+]

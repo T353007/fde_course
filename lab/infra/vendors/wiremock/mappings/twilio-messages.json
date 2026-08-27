@@ -1,0 +1,20 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/twilio/2010-04-01/Accounts/AC_northstar/Messages.json"
+  },
+  "response": {
+    "status": 201,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "sid": "SM{{randomValue length=32 type='ALPHANUMERIC'}}",
+      "status": "queued",
+      "to": "{{formData.to}}",
+      "from": "+17045550100",
+      "body": "{{formData.body}}",
+      "date_created": "{{now}}"
+    },
+    "transformers": ["response-template"]
+  },
+  "priority": 10
+}

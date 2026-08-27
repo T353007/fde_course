@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/optiscan/v1/ocr"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "jobId": "ocr_default_1",
+      "status": "SUCCEEDED",
+      "confidence": 0.94,
+      "text": "BUSINESS CHECKING STATEMENT\n05/04 STRIPE PAYOUT +48230.00\n05/06 TRANSFER FROM SAVINGS +30000.00\n05/11 STRIPE PAYOUT +51340.00\n05/18 FASTCAPITAL LOAN +75000.00\n05/22 STRIPE PAYOUT +47830.00\n"
+    }
+  }
+}

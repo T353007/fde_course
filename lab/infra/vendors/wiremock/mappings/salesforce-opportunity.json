@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/salesforce/services/data/v59.0/sobjects/Opportunity"
+  },
+  "response": {
+    "status": 201,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "id": "006{{randomValue length=12 type='ALPHANUMERIC'}}",
+      "success": true,
+      "errors": []
+    },
+    "transformers": ["response-template"]
+  },
+  "priority": 10
+}

@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/loancore/soap"
+  },
+  "response": {
+    "status": 503,
+    "headers": { "Content-Type": "text/xml; charset=utf-8" },
+    "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <soap:Fault>\n      <faultcode>soap:Server</faultcode>\n      <faultstring>BATCH_WINDOW_CLOSED</faultstring>\n      <detail>Funding accepted only 02:00-04:00 America/New_York</detail>\n    </soap:Fault>\n  </soap:Body>\n</soap:Envelope>\n"
+  },
+  "priority": 1
+}

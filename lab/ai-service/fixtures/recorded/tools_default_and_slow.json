@@ -1,0 +1,32 @@
+[
+  {
+    "fixture_id": "tools-default",
+    "prompt_version": "tool_router_v1",
+    "scenario": "default",
+    "match": {"mode": "any_input"},
+    "model": "qwen3:8b",
+    "response": {
+      "text": "{\"answer\": \"I looked up the application and the DSCR floor in policy.\", \"toolCalls\": [{\"toolName\": \"get_application\", \"arguments\": {\"applicationId\": \"44219\"}}, {\"toolName\": \"search_policy\", \"arguments\": {\"query\": \"debt service coverage ratio floor\", \"product\": \"TERM_LOAN\"}}]}",
+      "prompt_tokens": 680,
+      "completion_tokens": 90,
+      "latency_ms": 1400,
+      "finish_reason": "stop"
+    },
+    "recorded": {"from": "qwen3:8b@2026-05-18"},
+    "notes": "Happy path tool routing for a DSCR question."
+  },
+  {
+    "fixture_id": "tools-slow-p99",
+    "prompt_version": "tool_router_v1",
+    "scenario": "slow-p99",
+    "match": {"mode": "any_input"},
+    "sleep_seconds_range": [9.0, 40.0],
+    "model": "qwen3:8b",
+    "response": {
+      "delegate_to_scenario": "default",
+      "finish_reason": "stop"
+    },
+    "recorded": {"from": "synthetic"},
+    "notes": "Missions 31 and 34. Delay only. Content comes from default."
+  }
+]

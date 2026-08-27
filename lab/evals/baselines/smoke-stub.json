@@ -1,0 +1,372 @@
+{
+  "schemaVersion": 1,
+  "run": {
+    "suite": "smoke",
+    "provider": "stub",
+    "model": "baseline-keyword-v3",
+    "promptVersion": "stub-1",
+    "startedAt": "2026-08-27T08:50:09+00:00",
+    "durationSeconds": 0.0,
+    "matcher": "by_field",
+    "labelField": "classification",
+    "host": "Imtiazs-MacBook-Pro.local",
+    "python": "3.13.9",
+    "metadata": {}
+  },
+  "dataset": {
+    "path": "/Users/imtiazalam/code/fde_course/lab/data/golden/smoke.jsonl",
+    "sha256": "08f5eba838cd7211fddc650c678b8e15d1d8f7bcf5ff4bd59b5bc2fc5dc8a017",
+    "caseCount": 20,
+    "loadedAt": "2026-08-27T08:50:09+00:00",
+    "sizeBytes": 7430
+  },
+  "overall": {
+    "name": "OVERALL",
+    "support": 20,
+    "correct": 18,
+    "wrong": 2,
+    "accuracy": 0.9,
+    "share": 1.0,
+    "meanScore": 0.9,
+    "errors": 0,
+    "macro": {
+      "kind": "macro",
+      "precision": 0.955556,
+      "recall": 0.777778,
+      "f1": 0.809524
+    },
+    "weighted": {
+      "kind": "weighted",
+      "precision": 0.913333,
+      "recall": 0.9,
+      "f1": 0.878571
+    },
+    "perClass": {
+      "OPERATING_REVENUE": {
+        "label": "OPERATING_REVENUE",
+        "support": 13,
+        "predicted": 15,
+        "truePositives": 13,
+        "falsePositives": 2,
+        "falseNegatives": 0,
+        "precision": 0.866667,
+        "recall": 1.0,
+        "f1": 0.928571
+      },
+      "LOAN_PROCEEDS": {
+        "label": "LOAN_PROCEEDS",
+        "support": 4,
+        "predicted": 4,
+        "truePositives": 4,
+        "falsePositives": 0,
+        "falseNegatives": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "INTERNAL_TRANSFER": {
+        "label": "INTERNAL_TRANSFER",
+        "support": 3,
+        "predicted": 1,
+        "truePositives": 1,
+        "falsePositives": 0,
+        "falseNegatives": 2,
+        "precision": 1.0,
+        "recall": 0.333333,
+        "f1": 0.5
+      }
+    },
+    "confusion": {
+      "labels": [
+        "OPERATING_REVENUE",
+        "LOAN_PROCEEDS",
+        "INTERNAL_TRANSFER"
+      ],
+      "cells": [
+        {
+          "expected": "INTERNAL_TRANSFER",
+          "predicted": "INTERNAL_TRANSFER",
+          "count": 1
+        },
+        {
+          "expected": "INTERNAL_TRANSFER",
+          "predicted": "OPERATING_REVENUE",
+          "count": 2
+        },
+        {
+          "expected": "LOAN_PROCEEDS",
+          "predicted": "LOAN_PROCEEDS",
+          "count": 4
+        },
+        {
+          "expected": "OPERATING_REVENUE",
+          "predicted": "OPERATING_REVENUE",
+          "count": 13
+        }
+      ]
+    },
+    "description": "every case in the set"
+  },
+  "slices": [
+    {
+      "name": "loan_proceeds",
+      "support": 4,
+      "correct": 4,
+      "wrong": 0,
+      "accuracy": 1.0,
+      "share": 0.2,
+      "meanScore": 1.0,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "perClass": {
+        "LOAN_PROCEEDS": {
+          "label": "LOAN_PROCEEDS",
+          "support": 4,
+          "predicted": 4,
+          "truePositives": 4,
+          "falsePositives": 0,
+          "falseNegatives": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "LOAN_PROCEEDS"
+        ],
+        "cells": [
+          {
+            "expected": "LOAN_PROCEEDS",
+            "predicted": "LOAN_PROCEEDS",
+            "count": 4
+          }
+        ]
+      },
+      "description": "money the business borrowed, which is not revenue"
+    },
+    {
+      "name": "internal_transfer",
+      "support": 3,
+      "correct": 1,
+      "wrong": 2,
+      "accuracy": 0.333333,
+      "share": 0.15,
+      "meanScore": 0.333333,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 0.5,
+        "recall": 0.166667,
+        "f1": 0.25
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 1.0,
+        "recall": 0.333333,
+        "f1": 0.5
+      },
+      "perClass": {
+        "INTERNAL_TRANSFER": {
+          "label": "INTERNAL_TRANSFER",
+          "support": 3,
+          "predicted": 1,
+          "truePositives": 1,
+          "falsePositives": 0,
+          "falseNegatives": 2,
+          "precision": 1.0,
+          "recall": 0.333333,
+          "f1": 0.5
+        },
+        "OPERATING_REVENUE": {
+          "label": "OPERATING_REVENUE",
+          "support": 0,
+          "predicted": 2,
+          "truePositives": 0,
+          "falsePositives": 2,
+          "falseNegatives": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "INTERNAL_TRANSFER",
+          "OPERATING_REVENUE"
+        ],
+        "cells": [
+          {
+            "expected": "INTERNAL_TRANSFER",
+            "predicted": "INTERNAL_TRANSFER",
+            "count": 1
+          },
+          {
+            "expected": "INTERNAL_TRANSFER",
+            "predicted": "OPERATING_REVENUE",
+            "count": 2
+          }
+        ]
+      },
+      "description": "money moving between accounts the business already owns"
+    },
+    {
+      "name": "poor_ocr",
+      "support": 6,
+      "correct": 4,
+      "wrong": 2,
+      "accuracy": 0.666667,
+      "share": 0.3,
+      "meanScore": 0.666667,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 0.5,
+        "recall": 0.666667,
+        "f1": 0.555556
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 0.5,
+        "recall": 0.666667,
+        "f1": 0.555556
+      },
+      "perClass": {
+        "INTERNAL_TRANSFER": {
+          "label": "INTERNAL_TRANSFER",
+          "support": 2,
+          "predicted": 0,
+          "truePositives": 0,
+          "falsePositives": 0,
+          "falseNegatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "LOAN_PROCEEDS": {
+          "label": "LOAN_PROCEEDS",
+          "support": 2,
+          "predicted": 2,
+          "truePositives": 2,
+          "falsePositives": 0,
+          "falseNegatives": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "OPERATING_REVENUE": {
+          "label": "OPERATING_REVENUE",
+          "support": 2,
+          "predicted": 4,
+          "truePositives": 2,
+          "falsePositives": 2,
+          "falseNegatives": 0,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.666667
+        }
+      },
+      "confusion": {
+        "labels": [
+          "INTERNAL_TRANSFER",
+          "LOAN_PROCEEDS",
+          "OPERATING_REVENUE"
+        ],
+        "cells": [
+          {
+            "expected": "INTERNAL_TRANSFER",
+            "predicted": "OPERATING_REVENUE",
+            "count": 2
+          },
+          {
+            "expected": "LOAN_PROCEEDS",
+            "predicted": "LOAN_PROCEEDS",
+            "count": 2
+          },
+          {
+            "expected": "OPERATING_REVENUE",
+            "predicted": "OPERATING_REVENUE",
+            "count": 2
+          }
+        ]
+      },
+      "description": "scanned or faxed pages the OCR vendor mangled"
+    },
+    {
+      "name": "card_settlement",
+      "support": 11,
+      "correct": 11,
+      "wrong": 0,
+      "accuracy": 1.0,
+      "share": 0.55,
+      "meanScore": 1.0,
+      "errors": 0,
+      "macro": {
+        "kind": "macro",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "weighted": {
+        "kind": "weighted",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "perClass": {
+        "OPERATING_REVENUE": {
+          "label": "OPERATING_REVENUE",
+          "support": 11,
+          "predicted": 11,
+          "truePositives": 11,
+          "falsePositives": 0,
+          "falseNegatives": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "confusion": {
+        "labels": [
+          "OPERATING_REVENUE"
+        ],
+        "cells": [
+          {
+            "expected": "OPERATING_REVENUE",
+            "predicted": "OPERATING_REVENUE",
+            "count": 11
+          }
+        ]
+      },
+      "description": "daily payouts from a card processor, the easy majority"
+    }
+  ],
+  "cost": {
+    "calls": 20,
+    "promptTokens": 0,
+    "completionTokens": 0,
+    "totalTokens": 0,
+    "totalUsd": 0.0,
+    "usdPerCase": 0.0,
+    "latencyMs": {
+      "mean": 12.0,
+      "p50": 12.0,
+      "p95": 12.0,
+      "p99": 12.0
+    },
+    "wallClockSeconds": 0.0,
+    "costBasis": "stub provider, no model call was made"
+  },
+  "cases": []
+}
