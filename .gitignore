@@ -1,21 +1,60 @@
+# Dependencies
 node_modules/
+
+# Next.js
 .next/
 out/
+.turbo/
+.vercel
+*.tsbuildinfo
+
+# Build output
 dist/
 build/
+
+# Logs and temp
 *.log
+/tmp/northstar-*
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Secrets and local env (keep *.example)
 .env
 .env.local
 .env.*.local
-lab/**/.venv/
-lab/**/target/
-lab/**/__pycache__/
+!.env.example
+!**/.env.example
+
+# Python
+.venv/
+venv/
 **/__pycache__/
 *.pyc
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.coverage
+htmlcov/
+
+# Java / Maven
+**/target/
+*.class
+
+# IDE
 .idea/
 .vscode/
 *.iml
-lab/infra/postgres/seed/data/*.tmp
+*.swp
+*~
+
+# Cursor
 .cursor/
+
+# Lab generated data
+lab/infra/postgres/seed/data/*.tmp
+
+# Optional local Docker overrides
+docker-compose.override.yml
