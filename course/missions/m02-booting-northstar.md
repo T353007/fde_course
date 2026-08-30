@@ -218,7 +218,35 @@ Put it on a list.
 
 Start with one application. Pick any id in range.
 
-:::evidence{type=http label="application-service, port 8081"}
+Confluence has **two** API pages from 2022 that matter today:
+
+1. **Application API v1** — `application-service` on port **8081**
+2. **Underwriting API v1** — `underwriting-service` on port **8083**
+
+For each endpoint below: read what the wiki claims, then curl what the service returns.
+
+### 1. Application lookup (port 8081)
+
+:::evidence{type=schema label="Confluence: Application API v1, last edited 2022-08-19"}
+```text
+GET /api/v1/applications/{id}
+
+Required header: X-Tenant-Id (tenant code)
+
+Response:
+{
+  "applicationId": integer,
+  "applicantId": integer,
+  "product": string,
+  "amountRequested": decimal,
+  "status": string,
+  "submittedAt": string (ISO-8601),
+  "customerId": string
+}
+```
+:::
+
+:::evidence{type=http label="application-service — what you get for application 8"}
 ```bash
 curl -s localhost:8081/api/v1/applications/8 \
   -H 'X-Tenant-Id: NSC_DIRECT' | jq
@@ -239,36 +267,20 @@ curl -s localhost:8081/api/v1/applications/8 \
 ```
 :::
 
-The Confluence page for application lookup (same wiki, same vintage):
-
-:::evidence{type=schema label="Confluence: Application API v1, last edited 2022-08-19"}
-```text
-GET /api/v1/applications/{id}
-
-Response:
-{
-  "applicationId": integer,
-  "applicantId": integer,
-  "product": string,
-  "amountRequested": decimal,
-  "status": string,
-  "submittedAt": string (ISO-8601),
-  "customerId": string
-}
-```
-:::
-
-For application **8**, the core fields above match what you curled. The response also
-includes `decidedAt`, `createdAt`, and `updatedAt`, which are not in that schema. That
-is a good candidate for the row where **docs and reality mostly agree**.
+For application **8**, the core fields in the Confluence schema match what you curled.
+The response also includes `decidedAt`, `createdAt`, and `updatedAt`, which are **not** in
+that schema. That is a good candidate for the table row where **docs and reality mostly
+agree**.
 
 Note that `customerId` is `"NSC-DIRECT"` with a hyphen, while the header you sent was
 `NSC_DIRECT` with an underscore. Both appear to work. Add it to the list.
 
-Now the interesting one. Underwriting exposes a revenue summary, and the Confluence page
+### 2. Revenue summary (port 8083)
+
+Underwriting exposes a revenue summary. The **Underwriting API v1** Confluence page
 documents it like this.
 
-:::evidence{type=schema label="Confluence: Underwriting API v1, last edited 2022-08-19"}
+:::evidence{type=schema label="Confluence: Underwriting API v1 — revenue-summary"}
 ```text
 GET /api/v1/applications/{id}/revenue-summary
 
@@ -286,9 +298,9 @@ Errors: 404 if no bank data is linked.
 ```
 :::
 
-Here is what it actually returns.
+Here is what it actually returns for application **8**.
 
-:::evidence{type=http label="underwriting-service, port 8083"}
+:::evidence{type=http label="underwriting-service — revenue-summary, application 8"}
 ```bash
 curl -s localhost:8083/api/v1/applications/8/revenue-summary \
   -H 'X-Tenant-Id: NSC_DIRECT' | jq
@@ -335,9 +347,28 @@ done
 And there are two fields nobody documented at all: `calculatedAt` and `calcVersion`.
 `calcVersion` says `"v2"`.
 
-While you are here, look at what the number is built from.
+### 3. Bank transactions (port 8083)
 
-:::evidence{type=http label="underwriting-service, transactions behind that number"}
+While you are here, look at what the revenue number is built from. The same Underwriting
+API v1 page documents bank transactions like this:
+
+:::evidence{type=schema label="Confluence: Underwriting API v1 — bank-transactions"}
+```text
+GET /api/v1/applications/{id}/bank-transactions
+
+Response:
+{
+  "applicationId": integer,
+  "transactions": [
+    { "postedDate": date, "description": string, "amount": decimal }
+  ]
+}
+
+Errors: 404 when no bank statements are linked.
+```
+:::
+
+:::evidence{type=http label="underwriting-service — bank-transactions, application 8"}
 ```bash
 curl -s localhost:8083/api/v1/applications/8/bank-transactions \
   -H 'X-Tenant-Id: NSC_DIRECT' | jq -r '.transactions[] | "\(.postedDate)  \(.description)  \(.amount)"'
@@ -361,24 +392,6 @@ curl -s localhost:8083/api/v1/applications/8/bank-transactions \
 ```
 ```text
 sum of credits: 3206096.73   /  3 months  =  1068698.91
-```
-:::
-
-Confluence on bank transactions (same Underwriting API v1 page):
-
-:::evidence{type=schema label="Confluence: bank-transactions, last edited 2022-08-19"}
-```text
-GET /api/v1/applications/{id}/bank-transactions
-
-Response:
-{
-  "applicationId": integer,
-  "transactions": [
-    { "postedDate": date, "description": string, "amount": decimal }
-  ]
-}
-
-Errors: 404 when no bank statements are linked.
 ```
 :::
 
@@ -414,7 +427,7 @@ northstar:
 still says `"calcVersion": "v2"`. Those two facts disagree. You have no idea which one
 the decision engine actually uses. That is fine. Note them and move on.
 
-### Fourth endpoint: CASCADE application 1130 (no bank data)
+### 4. No bank data: CASCADE application 1130 (port 8083)
 
 `CASCADE` tenant, application **1130**. Same paths as endpoints 2 and 3, but the seed
 has **no** bank transactions for this application. Confluence says **404** when nothing
