@@ -239,6 +239,29 @@ curl -s localhost:8081/api/v1/applications/8 \
 ```
 :::
 
+The Confluence page for application lookup (same wiki, same vintage):
+
+:::evidence{type=schema label="Confluence: Application API v1, last edited 2022-08-19"}
+```text
+GET /api/v1/applications/{id}
+
+Response:
+{
+  "applicationId": integer,
+  "applicantId": integer,
+  "product": string,
+  "amountRequested": decimal,
+  "status": string,
+  "submittedAt": string (ISO-8601),
+  "customerId": string
+}
+```
+:::
+
+For application **8**, the core fields above match what you curled. The response also
+includes `decidedAt`, `createdAt`, and `updatedAt`, which are not in that schema. That
+is a good candidate for the row where **docs and reality mostly agree**.
+
 Note that `customerId` is `"NSC-DIRECT"` with a hyphen, while the header you sent was
 `NSC_DIRECT` with an underscore. Both appear to work. Add it to the list.
 
@@ -341,6 +364,28 @@ sum of credits: 3206096.73   /  3 months  =  1068698.91
 ```
 :::
 
+Confluence on bank transactions (same Underwriting API v1 page):
+
+:::evidence{type=schema label="Confluence: bank-transactions, last edited 2022-08-19"}
+```text
+GET /api/v1/applications/{id}/bank-transactions
+
+Response:
+{
+  "applicationId": integer,
+  "transactions": [
+    { "postedDate": date, "description": string, "amount": decimal }
+  ]
+}
+
+Errors: 404 when no bank statements are linked.
+```
+:::
+
+For application **8**, the shape matches: `applicationId` plus a `transactions` array of
+`postedDate`, `description`, and `amount`. That is your second **mostly agrees** row if
+you need one besides application lookup.
+
 You do not know enough yet to say whether 1,068,698.91 is right. Keep it. The endpoint
 returns **82** rows for application 8. Most of them are debits. The revenue number
 ignores debits and adds every credit, then divides by 3.
@@ -369,6 +414,46 @@ northstar:
 still says `"calcVersion": "v2"`. Those two facts disagree. You have no idea which one
 the decision engine actually uses. That is fine. Note them and move on.
 
+### Fourth endpoint: CASCADE application 1130 (no bank data)
+
+`CASCADE` tenant, application **1130**. Same paths as endpoints 2 and 3, but the seed
+has **no** bank transactions for this application. Confluence says **404** when nothing
+is linked. See what you get.
+
+:::evidence{type=http label="underwriting-service, port 8083 — revenue-summary, no data"}
+```bash
+curl -s localhost:8083/api/v1/applications/1130/revenue-summary \
+  -H 'X-Tenant-Id: CASCADE' | jq
+```
+```json
+{
+  "applicationId": 1130,
+  "avgMonthlyRevenue": 0.00,
+  "revenue": null,
+  "monthsAnalyzed": 3,
+  "calculatedAt": "2026-08-27T19:40:31.475526Z",
+  "calcVersion": "v2"
+}
+```
+:::
+
+:::evidence{type=http label="underwriting-service, port 8083 — bank-transactions, no data"}
+```bash
+curl -s localhost:8083/api/v1/applications/1130/bank-transactions \
+  -H 'X-Tenant-Id: CASCADE' | jq
+```
+```json
+{
+  "applicationId": 1130,
+  "transactions": []
+}
+```
+:::
+
+HTTP **200** both times, not 404. `revenue-summary` returns `0.00`; `bank-transactions`
+returns an empty array. Use **one** of these for your fourth table row (either is valid;
+the other is optional extra credit).
+
 ## What you do not know
 
 Keep this list in a file. It is the most valuable document you will produce this week.
@@ -385,14 +470,27 @@ Keep this list in a file. It is the most valuable document you will produce this
 Produce one page called "observed versus documented." One page.
 
 Four columns: endpoint, what the docs claim, what the endpoint returned, and what a
-client written from the docs would do. Cover at least four endpoints. At least one row
-must be a case where the docs and reality agree, because you need to know whether the
-docs are wrong everywhere or wrong in specific places. Those are different problems.
+client written from the docs would do. Cover **at least four endpoints** from this
+mission. Use this checklist:
+
+| # | Endpoint | Port | Example curl |
+| --- | --- | --- | --- |
+| 1 | `GET /api/v1/applications/{id}` | 8081 | application **8**, `X-Tenant-Id: NSC_DIRECT` |
+| 2 | `GET /api/v1/applications/{id}/revenue-summary` | 8083 | application **8** |
+| 3 | `GET /api/v1/applications/{id}/bank-transactions` | 8083 | application **8** |
+| 4 | `GET /api/v1/applications/{id}/revenue-summary` **or** `.../bank-transactions` | 8083 | application **1130**, `X-Tenant-Id: CASCADE` |
+
+At least one row must be a case where the docs and reality **agree** (or mostly agree).
+Endpoints **1** and **3** on application **8** are the easiest fits. Endpoints **2**
+and **4** are where the Confluence page is wrong or incomplete.
 
 Add a short section at the bottom titled "questions, not conclusions." Every item is
 phrased as a question, and every question names the person most likely to know.
 
-Save it as `customers/northstar/system-observations.md`. Do not send it to anyone yet.
+Save it as `customers/northstar/system-observations.md`. Create the folder if you
+have not already (`mkdir -p customers/northstar`). A blank table lives in
+`customers/northstar/system-observations.template.md`. Do not send your page to anyone
+yet.
 :::
 
 :::stopandthink
@@ -559,10 +657,11 @@ becomes useful in Phase 2 for a reason you cannot see from here.
 
 ## Then this happens
 
-Saturday morning you run the same curl on a `CASCADE` application and get something
-different.
+Saturday morning you run the same curls on application **1130** again. You already hit
+these for the deliverable if you followed the checklist above. The difference is you
+now know why the answer matters.
 
-:::evidence{type=http label="Saturday 9:20 AM"}
+:::evidence{type=http label="Saturday 9:20 AM — revenue-summary (repeat)"}
 ```bash
 curl -s localhost:8083/api/v1/applications/1130/revenue-summary \
   -H 'X-Tenant-Id: CASCADE' | jq
@@ -582,7 +681,7 @@ curl -s localhost:8083/api/v1/applications/1130/revenue-summary \
 Zero revenue, but `monthsAnalyzed` still says **3**, and an HTTP 200. The documented
 behavior for no bank data is a 404. You get a 200 with a zero.
 
-Confirm there is no bank data:
+You already confirmed there are no transactions:
 
 ```bash
 curl -s localhost:8083/api/v1/applications/1130/bank-transactions \
