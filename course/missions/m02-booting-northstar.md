@@ -780,22 +780,19 @@ out loud in week one, then behave that way for six weeks.
 
 ## Practice
 
-Different system, different industry, same skill.
+Different system, different industry, same skill. No answer key until you have written a
+response.
 
-**Do not open "Notes, after you have written yours" until you have answered the four
-questions below.** That spoiler is the answer key only.
+:::spoiler{label="Certification practice, then the notes"}
+**The setup**
 
-Use the two evidence blocks to compare **documented contract** vs **observed responses**:
+You are three days into an engagement with a healthcare claims clearinghouse. They
+process claims from small clinics and forward them to payers. Their integration guide,
+last updated two years ago, documents the endpoint below. You send four real claims from
+staging and compare the responses to that contract.
 
-| Compare | Where on this page |
-| --- | --- |
-| What the integration guide claims | **Documented contract** (schema block) |
-| What staging actually returned | **Observed responses** (HTTP block) |
-| What happened in production | **What happened eleven days later** |
+**Documented contract (integration guide, 2024)**
 
-### Documented contract (integration guide, 2024)
-
-:::evidence{type=schema label="Integration guide: POST /v2/claims/validate"}
 ```text
 POST /v2/claims/validate
 
@@ -811,20 +808,17 @@ Response:
 
 Semantics: a claim with valid=true is accepted by the payer.
 ```
-:::
 
-### What staging returned (four real claims)
+**Observed responses (four claims from staging)**
 
-:::evidence{type=http label="Observed responses"}
 ```json
 {"claimId":"CLM-88120","valid":true,"errors":[],"warnings":[{"code":"W41","message":"NPI not found in payer roster"}]}
 {"claimId":"CLM-88121","valid":true,"errors":[]}
 {"claimId":"CLM-88122","valid":false,"errors":[{"code":"E12","message":"invalid date of service"}]}
 {"claimId":"CLM-88123","valid":true,"errors":[],"warnings":[{"code":"W41","message":"NPI not found in payer roster"}]}
 ```
-:::
 
-### What happened eleven days later
+**What happened eleven days later**
 
 You check their reporting database. **CLM-88120** and **CLM-88123** were both rejected by
 the payer. The other two were accepted.
@@ -837,11 +831,9 @@ the payer. The other two were accepted.
 3. Write the single question you would ask their senior engineer, in one sentence.
 4. Write the contract check you would leave behind. Pseudocode is fine.
 
-:::spoiler{label="Notes, after you have written yours"}
-**The setup (recap)**
+---
 
-You are three days into an engagement with a healthcare claims clearinghouse. They
-process claims from small clinics and forward them to payers.
+**Notes, after you have written yours**
 
 The differences: an undocumented `warnings` array, and the array is absent rather than
 empty when there are no warnings, which is a second problem for any client that does
