@@ -3,6 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 
 const COURSE_DIR = path.join(process.cwd(), "course");
+const CONDENSED_DIR = path.join(COURSE_DIR, "missions-condensed");
 
 export type MissionStatus = "draft" | "complete" | "stub";
 
@@ -14,6 +15,7 @@ export interface MissionMeta {
   phase: number;
   order: number;
   duration: number; // minutes
+  durationCondensed?: number;
   difficulty: 1 | 2 | 3 | 4 | 5;
   objectives: string[];
   concepts: string[];
@@ -21,6 +23,7 @@ export interface MissionMeta {
   lab: boolean;
   status: MissionStatus;
   prereqs?: string[];
+  hasCondensed?: boolean;
 }
 
 export interface Mission extends MissionMeta {
@@ -71,31 +74,73 @@ function parseFile(dir: string, file: string) {
 }
 
 let missionCache: Mission[] | null = null;
+let condensedCache: Map<string, Mission> | null = null;
+
+function condensedMissionPath(slug: string): string | undefined {
+  if (!fs.existsSync(CONDENSED_DIR)) return undefined;
+  const match = fs
+    .readdirSync(CONDENSED_DIR)
+    .find((f) => f.endsWith(".md") && f.replace(/^m\d+-/i, "").replace(/\.md$/, "") === slug);
+  if (match) return path.join(CONDENSED_DIR, match);
+  const bySlug = path.join(CONDENSED_DIR, `${slug}.md`);
+  if (fs.existsSync(bySlug)) return bySlug;
+  return undefined;
+}
+
+function parseMissionFile(dir: string, file: string, opts?: { condensed?: boolean }): Mission {
+  const { data, content } = parseFile(dir, file);
+  const fallbackSlug = file.replace(/\.md$/, "").replace(/^m\d+-/i, "");
+
+  return {
+    id: String(data.id ?? file.slice(0, 3).toUpperCase()),
+    slug: String(data.slug ?? fallbackSlug),
+    title: String(data.title ?? fallbackSlug),
+    subtitle: data.subtitle ? String(data.subtitle) : undefined,
+    phase: Number(data.phase ?? 0),
+    order: Number(data.order ?? 0),
+    duration: Number(data.duration ?? 120),
+    durationCondensed: data.durationCondensed
+      ? Number(data.durationCondensed)
+      : undefined,
+    difficulty: (Number(data.difficulty ?? 3) as MissionMeta["difficulty"]),
+    objectives: (data.objectives ?? []) as string[],
+    concepts: (data.concepts ?? []) as string[],
+    competencies: (data.competencies ?? []) as string[],
+    lab: Boolean(data.lab ?? false),
+    status: (data.status ?? "draft") as MissionStatus,
+    prereqs: (data.prereqs ?? []) as string[],
+    hasCondensed: opts?.condensed ?? Boolean(data.condensed),
+    body: content,
+  } satisfies Mission;
+}
+
+function loadCondensedMap(): Map<string, Mission> {
+  if (condensedCache) return condensedCache;
+  const map = new Map<string, Mission>();
+  if (!fs.existsSync(CONDENSED_DIR)) {
+    condensedCache = map;
+    return map;
+  }
+  for (const file of readDir("missions-condensed")) {
+    const mission = parseMissionFile("missions-condensed", file, { condensed: true });
+    map.set(mission.slug, mission);
+  }
+  condensedCache = map;
+  return map;
+}
 
 export function getAllMissions(): Mission[] {
   if (missionCache) return missionCache;
 
+  const condensed = loadCondensedMap();
   const missions = readDir("missions").map((file) => {
-    const { data, content } = parseFile("missions", file);
-    const fallbackSlug = file.replace(/\.md$/, "").replace(/^m\d+-/i, "");
-
-    return {
-      id: String(data.id ?? file.slice(0, 3).toUpperCase()),
-      slug: String(data.slug ?? fallbackSlug),
-      title: String(data.title ?? fallbackSlug),
-      subtitle: data.subtitle ? String(data.subtitle) : undefined,
-      phase: Number(data.phase ?? 0),
-      order: Number(data.order ?? 0),
-      duration: Number(data.duration ?? 120),
-      difficulty: (Number(data.difficulty ?? 3) as MissionMeta["difficulty"]),
-      objectives: (data.objectives ?? []) as string[],
-      concepts: (data.concepts ?? []) as string[],
-      competencies: (data.competencies ?? []) as string[],
-      lab: Boolean(data.lab ?? false),
-      status: (data.status ?? "draft") as MissionStatus,
-      prereqs: (data.prereqs ?? []) as string[],
-      body: content,
-    } satisfies Mission;
+    const mission = parseMissionFile("missions", file);
+    const short = condensed.get(mission.slug);
+    mission.hasCondensed = Boolean(short);
+    if (short?.durationCondensed) {
+      mission.durationCondensed = short.durationCondensed;
+    }
+    return mission;
   });
 
   missions.sort((a, b) => a.order - b.order);
@@ -105,6 +150,29 @@ export function getAllMissions(): Mission[] {
 
 export function getMission(slug: string): Mission | undefined {
   return getAllMissions().find((m) => m.slug === slug);
+}
+
+export function getCondensedMission(slug: string): Mission | undefined {
+  return loadCondensedMap().get(slug);
+}
+
+export function getMissionForTrack(
+  slug: string,
+  track: "full" | "condensed"
+): { mission: Mission; usingCondensed: boolean } | undefined {
+  const full = getMission(slug);
+  if (!full) return undefined;
+  if (track === "condensed") {
+    const condensed = getCondensedMission(slug);
+    if (condensed) {
+      return { mission: condensed, usingCondensed: true };
+    }
+  }
+  return { mission: full, usingCondensed: false };
+}
+
+export function countCondensedMissions(): number {
+  return loadCondensedMap().size;
 }
 
 export function getMissionNeighbors(slug: string) {
@@ -178,6 +246,7 @@ export interface CourseStats {
   complete: number;
   phases: number;
   minutes: number;
+  minutesCondensed: number;
   exams: number;
 }
 
@@ -188,6 +257,10 @@ export function getCourseStats(): CourseStats {
     complete: missions.filter((m) => m.status === "complete").length,
     phases: getAllPhases().length,
     minutes: missions.reduce((sum, m) => sum + m.duration, 0),
+    minutesCondensed: missions.reduce(
+      (sum, m) => sum + (m.durationCondensed ?? Math.round(m.duration * 0.4)),
+      0
+    ),
     exams: getDocs("certification").filter((d) => d.kind === "exam").length,
   };
 }

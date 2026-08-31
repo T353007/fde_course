@@ -10,7 +10,8 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "course:status": "node scripts/course-status.mjs",
-    "course:validate": "node scripts/validate-content.mjs"
+    "course:validate": "node scripts/validate-content.mjs",
+    "course:condensed": "node scripts/generate-condensed-missions.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

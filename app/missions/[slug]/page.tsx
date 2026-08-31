@@ -1,14 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import {
   getAllMissions,
-  getMission,
+  getMissionForTrack,
   getMissionNeighbors,
   getAllPhases,
   formatDuration,
 } from "@/lib/content";
 import { renderMarkdown, extractToc } from "@/lib/markdown";
+import { TrackBanner } from "@/components/track-banner";
+import { parseTrack, TRACK_COOKIE } from "@/lib/track";
 
 export function generateStaticParams() {
   return getAllMissions().map((m) => ({ slug: m.slug }));
@@ -20,10 +23,14 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const mission = getMission(slug);
-  if (!mission) return {};
+  const cookieStore = await cookies();
+  const track = parseTrack(cookieStore.get(TRACK_COOKIE)?.value);
+  const loaded = getMissionForTrack(slug, track);
+  if (!loaded) return {};
+  const { mission } = loaded;
+  const suffix = track === "condensed" ? " (Compressed)" : "";
   return {
-    title: `${mission.id} · ${mission.title}`,
+    title: `${mission.id} · ${mission.title}${suffix}`,
     description: mission.subtitle,
   };
 }
@@ -34,19 +41,27 @@ export default async function MissionPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const mission = getMission(slug);
-  if (!mission) notFound();
+  const cookieStore = await cookies();
+  const track = parseTrack(cookieStore.get(TRACK_COOKIE)?.value);
+  const loaded = getMissionForTrack(slug, track);
+  if (!loaded) notFound();
+
+  const { mission, usingCondensed } = loaded;
+  const fullMeta = getMissionForTrack(slug, "full")!.mission;
 
   const html = await renderMarkdown(mission.body);
   const toc = extractToc(mission.body).filter((t) => t.depth === 2);
   const { prev, next } = getMissionNeighbors(slug);
   const phase = getAllPhases().find((p) => p.number === mission.phase);
+  const displayDuration =
+    usingCondensed && mission.durationCondensed
+      ? mission.durationCondensed
+      : mission.duration;
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-12">
       <div className="lg:grid lg:grid-cols-[1fr_15rem] lg:gap-12">
         <article className="min-w-0">
-          {/* --------------------------------------------------------- header */}
           <header className="border-b border-[var(--color-line)] pb-8">
             <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[var(--color-fg-mute)]">
               <span className="text-[var(--color-teal)]">{mission.id}</span>
@@ -60,7 +75,13 @@ export default async function MissionPage({
                 </Link>
               )}
               <span>/</span>
-              <span>{formatDuration(mission.duration)}</span>
+              <span>{formatDuration(displayDuration)}</span>
+              {usingCondensed && (
+                <>
+                  <span>/</span>
+                  <span className="text-[var(--color-teal)]">compressed</span>
+                </>
+              )}
               {mission.lab && (
                 <>
                   <span>/</span>
@@ -77,6 +98,8 @@ export default async function MissionPage({
                 {mission.subtitle}
               </p>
             )}
+
+            <TrackBanner track={track} hasCondensed={fullMeta.hasCondensed ?? false} />
 
             {mission.objectives.length > 0 && (
               <div className="mt-7 rounded-xl border border-[var(--color-line)] bg-[var(--color-panel)] p-5">
@@ -98,13 +121,11 @@ export default async function MissionPage({
             )}
           </header>
 
-          {/* ---------------------------------------------------------- body */}
           <div
             className="prose mt-10"
             dangerouslySetInnerHTML={{ __html: html }}
           />
 
-          {/* ------------------------------------------------------ nav footer */}
           <nav className="mt-16 grid gap-3 border-t border-[var(--color-line)] pt-8 sm:grid-cols-2">
             {prev ? (
               <Link
@@ -137,7 +158,6 @@ export default async function MissionPage({
           </nav>
         </article>
 
-        {/* ------------------------------------------------------------ aside */}
         <aside className="mt-12 lg:mt-0">
           <div className="lg:sticky lg:top-20">
             {toc.length > 0 && (

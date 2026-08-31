@@ -1,10 +1,16 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { getAllPhases, getCourseStats, formatDuration } from "@/lib/content";
+import { TrackToggle } from "@/components/track-toggle";
+import { parseTrack, TRACK_COOKIE } from "@/lib/track";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const cookieStore = await cookies();
+  const track = parseTrack(cookieStore.get(TRACK_COOKIE)?.value);
   const phases = getAllPhases();
   const stats = getCourseStats();
   const hours = Math.round(stats.minutes / 60);
+  const compressedHours = Math.round(stats.minutesCondensed / 60);
 
   return (
     <>
@@ -43,6 +49,15 @@ export default function HomePage() {
               >
                 See all {stats.missions} missions
               </Link>
+            </div>
+
+            <div className="fade-up mt-10 max-w-xl">
+              <TrackToggle track={track} />
+              <p className="mt-3 text-[13px] leading-relaxed text-[var(--color-fg-mute)]">
+                {track === "condensed"
+                  ? `Compressed path: about ${compressedHours}h of reading plus the same lab work.`
+                  : `Full path: about ${hours}h guided. Switch anytime from the header.`}
+              </p>
             </div>
           </div>
 
